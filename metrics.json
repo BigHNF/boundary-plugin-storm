@@ -1,0 +1,196 @@
+{
+  "result": [
+    {
+      "name": "STORM_CLUSTER_TOPOLOGIES",
+      "displayName": "Storm Cluster Topologies",
+      "description": "Number of topologies running on the cluster.",
+      "unit": "integer",
+      "displayNameShort": "Storm ClTop",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_CLUSTER_EXECUTORS",
+      "displayName": "Storm Cluster Executors",
+      "description": "Total number of executors running on the cluster.",
+      "unit": "integer",
+      "displayNameShort": "Storm ClExec",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_CLUSTER_SLOTS_TOTAL",
+      "displayName": "Storm Cluster Slots Total",
+      "description": "Total number of available worker slots on the cluster.",
+      "unit": "integer",
+      "displayNameShort": "Storm ClSlots Total",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_CLUSTER_SLOTS_USED",
+      "displayName": "Storm Cluster Slots Used",
+      "description": "Number of worker slots used on the cluster.",
+      "unit": "integer",
+      "displayNameShort": "Storm ClSlots Used",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_CLUSTER_TASKS_TOTAL",
+      "displayName": "Storm Cluster Tasks Total",
+      "description": "Total number of tasks on the cluster.",
+      "unit": "integer",
+      "displayNameShort": "Storm ClTsk",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_TOPOLOGY_EMITTED",
+      "displayName": "Storm Topology Emitted",
+      "description": "Number of messages emitted per topology per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm TopEmit",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_TOPOLOGY_TRANSFERRED",
+      "displayName": "Storm Topology Transferred",
+      "description": "Number messages transferred per topology per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm TopTrans",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_TOPOLOGY_ACKED",
+      "displayName": "Storm Topology Acked",
+      "description": "Number messages acked per topology per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm TopAck",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_TOPOLOGY_FAILED",
+      "displayName": "Storm Topology Failed",
+      "description": "Number messages failed per topology per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm TopFail",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_TOPOLOGY_COMPLETELATENCY",
+      "displayName": "Storm Topology CompleteLatency",
+      "description": "Total latency for processing messages per topology per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm TopComplete Lat",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_EXECUTORS",
+      "displayName": "Storm Bolt Executors",
+      "description": "Number of executor tasks in the bolt component.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolExec",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_TASKS",
+      "displayName": "Storm Bolt Tasks",
+      "description": "Number of instances of bolt.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolTsk",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_EMITTED",
+      "displayName": "Storm Bolt Emitted",
+      "description": "Number of tuples emitted per bolt per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolEmit",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_ACKED",
+      "displayName": "Storm Bolt Acked",
+      "description": "Number of tuples acked by the bolt per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolAck",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_FAILED",
+      "displayName": "Storm Bolt Failed",
+      "description": "Number of tuples failed by the bolt per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolFail",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_CAPACITY",
+      "displayName": "Storm Bolt Capacity",
+      "description": "Number of messages executed * average execute latency per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolCap",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_EXECUTELATENCY",
+      "displayName": "Storm Bolt Executelatency",
+      "description": "Average time to run the execute method of the bolt per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolExec",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_BOLT_PROCESSLATENCY",
+      "displayName": "Storm Bolt ProcessLatency",
+      "description": "Average time of the bolt to ack a message after it was received per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm BolProc Lat",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_EXECUTORS",
+      "displayName": "Storm Spout Executors",
+      "description": "Number of executors for the spout.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoExec",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_TASKS",
+      "displayName": "Storm Spout Tasks",
+      "description": "Total number of tasks for the spout.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoTsk",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_EMITTED",
+      "displayName": "Storm Spout Emitted",
+      "description": "Number of messages emitted per spout per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoEmit",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_ACKED",
+      "displayName": "Storm Spout Acked",
+      "description": "Number of messages acked per spout per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoAck",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_FAILED",
+      "displayName": "Storm Spout Failed",
+      "description": "Number of messages failed per spout per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoFail",
+      "defaultAggregate": "avg"
+    },
+    {
+      "name": "STORM_SPOUT_COMPLETELATENCY",
+      "displayName": "Storm Spout CompleteLatency",
+      "description": "Total latency for processing the message per spout per second.",
+      "unit": "integer",
+      "displayNameShort": "Storm SpoComplete Lat",
+      "defaultAggregate": "avg"
+    }
+  ]
+}

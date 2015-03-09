@@ -1,0 +1,93 @@
+{
+  "description" : "Collects statistical metrics from Apache Storm nimbus master.",
+  "icon" : "icon.png",
+
+  "command_lua": "boundary-meter init.lua",
+  "postExtract_lua" : "",
+
+  "metrics" : [
+    "STORM_"
+  ],
+
+  "paramSchema": [
+    {
+      "title": "Storm UI Host",
+      "name": "serverHost",
+      "description": "The Apache Storm UI service host (default: 'localhost').",
+      "type" : "string",
+      "default" : "localhost",
+      "required" : false
+    },
+    {
+      "title": "Storm UI Port",
+      "name": "serverPort",
+      "description": "The Apache Storm UI service port (default: 8091).",
+      "type" : "integer",
+      "default" : 8091,
+      "required" : false
+    },
+
+    {
+      "title": "Poll Retry Count",
+      "name": "pollRetryCount",
+      "description": "The number of times to retry failed HTTP requests (default: 5, infinite: 0).",
+      "type" : "integer",
+      "default" : 5,
+      "required" : false
+    },
+    {
+      "title": "Poll Retry Delay",
+      "name": "pollRetryDelay",
+      "description": "The interval (in milliseconds) to wait before retrying a failed request (default: 3000).",
+      "type" : "integer",
+      "default" : 3000,
+      "required" : false
+    },
+
+    {
+      "title": "Poll Interval",
+      "name": "pollInterval",
+      "description": "How often (in milliseconds) to poll the Storm UI node for metrics (default: 5000).",
+      "type" : "integer",
+      "default" : 5000,
+      "required" : false
+    },
+
+    {
+      "title": "Show All Topologies",
+      "name": "showAllTopologies",
+      "description": "Show metrics for all topologies and ignore showTopologies array (default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
+    },
+    {
+      "title": "Show Topologies",
+      "name": "showTopologies",
+      "description": "Select topologies (by name or id) to show metrics for (default: []).",
+      "type" : "array",
+      "items": {
+        "type": "string"
+      },
+      "default" : [],
+      "required" : false
+    },
+    {
+      "title": "Show Bolts",
+      "name": "showBolts",
+      "description": "Show metrics for each bolt in each topology (default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
+    },
+    {
+      "title": "Show Spouts",
+      "name": "showSpouts",
+      "description": "Show metrics for each spout in each topology (default: true).",
+      "type" : "boolean",
+      "default" : true,
+      "required" : false
+    }
+  ]
+
+}
