@@ -1,14 +1,13 @@
 {
-  "serverHost": "localhost",
-  "serverPort": 8080,
-
-  "pollRetryCount": 3,
-  "pollRetryDelay": 100,
-
-  "pollInterval": 1000,
-
-  "showAllTopologies": true,
-  "showTopologies": [ ],
-  "showBolts": true,
-  "showSpouts": true
+	items: [
+	{
+		"host" : "127.0.0.1",
+		"port" : 8080,
+		"topologies_filter": [],
+		"show_spouts" : true,
+		"show_bolts": true,
+		"pollInterval" : 1000
+		"source" : "storm-test"
+	}],
+	"pollInterval" : 1000
 }
