@@ -1,70 +1,66 @@
 {
-  "description" : "Collects statistical metrics from Apache Storm nimbus master.",
-  "icon" : "icon.png",
-
-  "command_lua": "boundary-meter init.lua",
+  "name" : "TrueSight Pulse Storm",
+  "version" : "0.9.0",
+  "meterVersionRequired" : "4.2.0-611",
+  "unsupportedPlatforms" : [ ],
+  "tags" : "redis", 
+  "description": "Displays metrics from Storm Nimbus server",
+  "icon": "icon.png",
+  "command": "",
+  "posExtract": "",
+  "command_lua" : "boundary-meter init.lua",
   "postExtract_lua" : "",
-
-  "metrics" : [
-    "STORM_"
+  "ignore": "node_modules",
+  "metrics": [
+	  ""
   ],
-
+  "dashboards": [
+    {
+      "name": "Storm",
+      "layout": ""
+    }
+  ],
+  "paramArray": {
+    "itemTitle": [
+      "host","source"
+    ],
+    "schemaTitle": "Host"
+  },
   "paramSchema": [
     {
       "title": "Storm UI Host",
-      "name": "serverHost",
-      "description": "The Apache Storm UI service host (default: 'localhost').",
-      "type" : "string",
-      "default" : "localhost",
-      "required" : false
+      "name": "host",
+      "description": "The Storm UI host.",
+      "type": "string",
+      "default" : "127.0.0.1",
+      "required" : true
     },
     {
       "title": "Storm UI Port",
-      "name": "serverPort",
-      "description": "The Apache Storm UI service port (default: 8091).",
-      "type" : "integer",
-      "default" : 8091,
-      "required" : false
-    },
-
-    {
-      "title": "Poll Retry Count",
-      "name": "pollRetryCount",
-      "description": "The number of times to retry failed HTTP requests (default: 5, infinite: 0).",
-      "type" : "integer",
-      "default" : 5,
-      "required" : false
+      "name": "port",
+      "description": "The Storm UI port.",
+      "type": "integer",
+      "default": 8080,
+      "required" : true
     },
     {
-      "title": "Poll Retry Delay",
-      "name": "pollRetryDelay",
-      "description": "The interval (in milliseconds) to wait before retrying a failed request (default: 3000).",
-      "type" : "integer",
-      "default" : 3000,
-      "required" : false
-    },
-
-    {
-      "title": "Poll Interval",
-      "name": "pollInterval",
-      "description": "How often (in milliseconds) to poll the Storm UI node for metrics (default: 5000).",
-      "type" : "integer",
-      "default" : 5000,
-      "required" : false
-    },
-
-    {
-      "title": "Show All Topologies",
-      "name": "showAllTopologies",
-      "description": "Show metrics for all topologies and ignore showTopologies array (default: true).",
-      "type" : "boolean",
-      "default" : true,
+      "title": "Username",
+      "name": "username",
+      "description": "Username of the Storm UI.",
+      "type": "string",
+      "default" : "",
       "required" : false
     },
     {
-      "title": "Show Topologies",
-      "name": "showTopologies",
-      "description": "Select topologies (by name or id) to show metrics for (default: []).",
+      "title": "Password",
+      "name": "password",
+      "description": "Password of the Storm UI.",
+      "type": "password"
+    },
+    {
+      "title": "Topologies Filter",
+      "name": "topologies_filter",
+      "description": "Select topologies (by name or id) to show metrics for. If empty, it will show all topologies.",
       "type" : "array",
       "items": {
         "type": "string"
@@ -74,20 +70,34 @@
     },
     {
       "title": "Show Bolts",
-      "name": "showBolts",
-      "description": "Show metrics for each bolt in each topology (default: true).",
+      "name": "show_bolts",
+      "description": "Show metrics for each bolt in each topology.",
       "type" : "boolean",
       "default" : true,
       "required" : false
     },
     {
       "title": "Show Spouts",
-      "name": "showSpouts",
-      "description": "Show metrics for each spout in each topology (default: true).",
+      "name": "show_spouts",
+      "description": "Show metrics for each spout in each topology.",
       "type" : "boolean",
       "default" : true,
       "required" : false
+    },
+    {
+      "title": "Poll Interval (ms)",
+      "name": "pollInterval",
+      "description": "How often (in milliseconds) should the plugin poll for metrics",
+      "type" : "integer",
+      "default" : 1000,
+      "required" : false 
+    },
+    {
+      "title": "Source",
+      "name": "source",
+      "description": "The source to display in the legend for the metric data.",
+      "type": "string",
+      "required" : true
     }
   ]
-
 }
