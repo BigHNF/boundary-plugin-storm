@@ -66,7 +66,6 @@ local function createTopologySummaryDataSource()
 
     local success, parsed = parseJson(data)
     if not success then
-      -- TODO: Emit error
       return nil
     end
  
@@ -96,7 +95,7 @@ local function clusterSummaryExtractor (data)
   metric('STORM_CLUSTER_SLOTS_TOTAL', data.slotsTotal)
   metric('STORM_CLUSTER_SLOTS_USED',  data.slotsUsed)
   metric('STORM_CLUSTER_TASKS_TOTAL', data.tasksTotal)
-  metric('SOTRM_CLUSTER_SUPERVISORS', data.supervisors)
+  metric('STORM_CLUSTER_SUPERVISORS', data.supervisors)
   return result
 end
 
@@ -106,7 +105,6 @@ local function topologyDetailExtractor(topology)
 
     -- Topology-level metrics.
     local tsrc = params.source .. '/' .. topology.id
-    -- TODO: Check topology.topologyStats
     metric('STORM_TOPOLOGY_TASKS_TOTAL', topology.tasksTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_WORKERS_TOTAL', topology.workersTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_EXECUTORS_TOTAL', topology.executorsTotal, nil, tsrc)
@@ -157,13 +155,13 @@ local plugin = Plugin:new(params, ds)
 function plugin:onParseValues(data, extra)
 
   if not isHttpSuccess(extra.status_code) then
-    -- TODO: Emit error event.
+    self:emitEvent('error', ('Http request returned status code %s instead of OK. Please verify configuration.'):format(extra.status_code))
     return
   end
 
   local success, parsed = parseJson(data)
   if not success then
-    -- TODO: Emit error event.
+    self:emitEvent('error', 'Can not parse metrics. Please verify configuration.') 
     return
   end
 
