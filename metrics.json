@@ -1,194 +1,235 @@
 {
-  "STORM_BOLT_ACKED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_COMPACTION_PENDING_TASKS": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of tuples acked by the bolt per second.",
-    "displayName": "Storm Bolt Acked",
-    "displayNameShort": "Storm BolAck",
+    "description": "Cassandra - Compaction Pending Tasks",
+    "displayName": "Compaction Pendings",
+    "displayNameShort": "Compact. Pendings",
     "unit": "number"
   },
-  "STORM_BOLT_CAPACITY": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_COMPACTION_COMPLETED_TASKS": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of messages executed * average execute latency per second.",
-    "displayName": "Storm Bolt Capacity",
-    "displayNameShort": "Storm BolCap",
+    "description": "Cassandra - Compaction Completed Tasks",
+    "displayName": "Compaction Completed",
+    "displayNameShort": "Compact. Completed",
     "unit": "number"
   },
-  "STORM_BOLT_EMITTED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_COMPACTION_TOTAL_COMPLETED_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of tuples emitted per bolt per second.",
-    "displayName": "Storm Bolt Emitted",
-    "displayNameShort": "Storm BolEmit",
+    "description": "Cassandra - Compaction Completed Rate",
+    "displayName": "Compaction Rate",
+    "displayNameShort": "Compact. Completed Rate",
     "unit": "number"
   },
-  "STORM_BOLT_EXECUTELATENCY": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_KEYCACHE_HITRATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Average time to run the execute method of the bolt per second.",
-    "displayName": "Storm Bolt Executelatency",
-    "displayNameShort": "Storm BolExec",
+    "description": "Cassandra - Cache KeyCache Hit Rate",
+    "displayName": "KeyCache Hit Rate",
+    "displayNameShort": "KeyCache Hit Rate",
     "unit": "number"
   },
-  "STORM_BOLT_EXECUTORS": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_KEYCACHE_REQUESTS_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of executor tasks in the bolt component.",
-    "displayName": "Storm Bolt Executors",
-    "displayNameShort": "Storm BolExec",
+    "description": "Cassandra - Cache KeyCache Requests Rate",
+    "displayName": "KeyCache Request Rate",
+    "displayNameShort": "KeyCache Req. Rate",
     "unit": "number"
   },
-  "STORM_BOLT_FAILED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_KEYCACHE_ENTRIES": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of tuples failed by the bolt per second.",
-    "displayName": "Storm Bolt Failed",
-    "displayNameShort": "Storm BolFail",
+    "description": "Cassandra - Cache KeyCache Entries",
+    "displayName": "KeyCache Entries",
+    "displayNameShort": "KeyCache Entries",
     "unit": "number"
   },
-  "STORM_BOLT_PROCESSLATENCY": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_KEYCACHE_SIZE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Average time of the bolt to ack a message after it was received per second.",
-    "displayName": "Storm Bolt ProcessLatency",
-    "displayNameShort": "Storm BolProc Lat",
+    "description": "Cassandra - Cache KeyCache Size in bytes",
+    "displayName": "KeyCache Size",
+    "displayNameShort": "KeyCache Size",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_CACHE_KEYCACHE_CAPACITY": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Cache KeyCache Capacity in bytes",
+    "displayName": "KeyCache Capacity",
+    "displayNameShort": "KeyCache Capacity",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_CACHE_ROWCACHE_HITRATE": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Cache RowCache Hit Rate",
+    "displayName": "RowCache Hit Rate",
+    "displayNameShort": "RowCache Hit Rate",
     "unit": "number"
   },
-  "STORM_BOLT_TASKS": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_ROWCACHE_REQUESTS_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of instances of bolt.",
-    "displayName": "Storm Bolt Tasks",
-    "displayNameShort": "Storm BolTsk",
+    "description": "Cassandra - Cache RowCache Requests Rate",
+    "displayName": "RowCache Request Rate",
+    "displayNameShort": "RowCache Req. Rate",
     "unit": "number"
   },
-  "STORM_CLUSTER_EXECUTORS": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_ROWCACHE_ENTRIES": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Total number of executors running on the cluster.",
-    "displayName": "Storm Cluster Executors",
-    "displayNameShort": "Storm ClExec",
+    "description": "Cassandra - Cache RowCache Entries",
+    "displayName": "RowCache Entries",
+    "displayNameShort": "RowCache Entries",
     "unit": "number"
   },
-  "STORM_CLUSTER_SLOTS_TOTAL": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_ROWCACHE_SIZE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Total number of available worker slots on the cluster.",
-    "displayName": "Storm Cluster Slots Total",
-    "displayNameShort": "Storm ClSlots Total",
+    "description": "Cassandra - Cache RowCache Size in bytes",
+    "displayName": "RowCache Size",
+    "displayNameShort": "RowCache Size",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_CACHE_ROWCACHE_CAPACITY": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Cache RowCache Capacity in bytes",
+    "displayName": "RowCache Capacity",
+    "displayNameShort": "RowCache Capacity",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_CACHE_COUNTERCACHE_HITRATE": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Cache CounterCache Hit Rate",
+    "displayName": "CounterCache Hit Rate",
+    "displayNameShort": "CounterCache Hit Rate",
     "unit": "number"
   },
-  "STORM_CLUSTER_SLOTS_USED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_COUNTERCACHE_REQUESTS_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of worker slots used on the cluster.",
-    "displayName": "Storm Cluster Slots Used",
-    "displayNameShort": "Storm ClSlots Used",
+    "description": "Cassandra - Cache CounterCache Requests Rate",
+    "displayName": "CounterCache Request Rate",
+    "displayNameShort": "CounterCache Req. Rate",
     "unit": "number"
   },
-  "STORM_CLUSTER_TASKS_TOTAL": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_COUNTERCACHE_ENTRIES": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Total number of tasks on the cluster.",
-    "displayName": "Storm Cluster Tasks Total",
-    "displayNameShort": "Storm ClTsk",
+    "description": "Cassandra - Cache CounterCache Entries",
+    "displayName": "CounterCache Entries",
+    "displayNameShort": "CounterCache Entries",
     "unit": "number"
   },
-  "STORM_CLUSTER_TOPOLOGIES": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CACHE_COUNTERCACHE_SIZE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of topologies running on the cluster.",
-    "displayName": "Storm Cluster Topologies",
-    "displayNameShort": "Storm ClTop",
+    "description": "Cassandra - Cache CounterCache Size",
+    "displayName": "CounterCache Size",
+    "displayNameShort": "CounterCache Size",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_CACHE_COUNTERCACHE_CAPACITY": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Cache CounterCache Capacity",
+    "displayName": "CounterCache Capacity",
+    "displayNameShort": "CounterCache Capacity",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_HEAPMEMORY_USED": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Heap Memory Used",
+    "displayName": "Heap Memory Used",
+    "displayNameShort": "Heap Memory Used",
+    "unit": "bytecount"
+  },
+  "CASSANDRA_WRITE_LATENCY_MEAN": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Write Latency Mean",
+    "displayName": "Write Latency Mean",
+    "displayNameShort": "Write Latency",
+    "unit": "duration"
+  },
+  "CASSANDRA_WRITE_FAILURES_RATE": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Write Failures Rate",
+    "displayName": "Write Failures Rate",
+    "displayNameShort": "Write Failures",
     "unit": "number"
   },
-  "STORM_SPOUT_ACKED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_WRITE_TIMEOUTS_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of messages acked per spout per second.",
-    "displayName": "Storm Spout Acked",
-    "displayNameShort": "Storm SpoAck",
+    "description": "Cassandra - Write Timeouts Rate",
+    "displayName": "Write Timeouts Rate",
+    "displayNameShort": "Write Timeouts",
     "unit": "number"
   },
-  "STORM_SPOUT_COMPLETELATENCY": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_READ_LATENCY_MEAN": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Total latency for processing the message per spout per second.",
-    "displayName": "Storm Spout CompleteLatency",
-    "displayNameShort": "Storm SpoComplete Lat",
+    "description": "Cassandra - Read Latency Mean",
+    "displayName": "Read Latency Mean",
+    "displayNameShort": "Read Latency",
+    "unit": "duration"
+  },
+  "CASSANDRA_READ_FAILURES_RATE": {
+    "defaultAggregate": "max",
+    "defaultResolutionMS": 1000,
+    "description": "Cassandra - Read Failures Rate",
+    "displayName": "Read Failures Rate",
+    "displayNameShort": "Read Failures",
     "unit": "number"
   },
-  "STORM_SPOUT_EMITTED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_READ_TIMEOUTS_RATE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of messages emitted per spout per second.",
-    "displayName": "Storm Spout Emitted",
-    "displayNameShort": "Storm SpoEmit",
+    "description": "Cassandra - Read Timeouts Rate",
+    "displayName": "Read Timeouts Rate",
+    "displayNameShort": "Read Timeouts",
     "unit": "number"
   },
-  "STORM_SPOUT_EXECUTORS": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CLIENT_CONNECTED_THRIFT_CLIENTS": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of executors for the spout.",
-    "displayName": "Storm Spout Executors",
-    "displayNameShort": "Storm SpoExec",
+    "description": "Cassandra - Clients Connected Thrift",
+    "displayName": "Clients Connected Thrift",
+    "displayNameShort": "Clients Conn. Thrift",
     "unit": "number"
   },
-  "STORM_SPOUT_FAILED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_CLIENT_CONNECTED_NATIVE_CLIENTS": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number of messages failed per spout per second.",
-    "displayName": "Storm Spout Failed",
-    "displayNameShort": "Storm SpoFail",
+    "description": "Cassandra - Clients Connected Native",
+    "displayName": "Clients Connected Native",
+    "displayNameShort": "Clients Conn. Native",
     "unit": "number"
   },
-  "STORM_SPOUT_TASKS": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_STORAGE_LOAD_BYTES": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Total number of tasks for the spout.",
-    "displayName": "Storm Spout Tasks",
-    "displayNameShort": "Storm SpoTsk",
-    "unit": "number"
+    "description": "Cassandra - Storage Load Bytes",
+    "displayName": "Storage Load Bytes",
+    "displayNameShort": "Storage Load",
+    "unit": "bytecount"
   },
-  "STORM_TOPOLOGY_ACKED": {
-    "defaultAggregate": "avg",
+  "CASSANDRA_STORAGE_COMMITLOG_SIZE": {
+    "defaultAggregate": "max",
     "defaultResolutionMS": 1000,
-    "description": "Number messages acked per topology per second.",
-    "displayName": "Storm Topology Acked",
-    "displayNameShort": "Storm TopAck",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_COMPLETELATENCY": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Total latency for processing messages per topology per second.",
-    "displayName": "Storm Topology CompleteLatency",
-    "displayNameShort": "Storm TopComplete Lat",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_EMITTED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number of messages emitted per topology per second.",
-    "displayName": "Storm Topology Emitted",
-    "displayNameShort": "Storm TopEmit",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_FAILED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number messages failed per topology per second.",
-    "displayName": "Storm Topology Failed",
-    "displayNameShort": "Storm TopFail",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_TRANSFERRED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number messages transferred per topology per second.",
-    "displayName": "Storm Topology Transferred",
-    "displayNameShort": "Storm TopTrans",
-    "unit": "number"
+    "description": "Cassandra - Storage Commitlog Size",
+    "displayName": "Storage Commitlog Size",
+    "displayNameShort": "Storage Commitlog",
+    "unit": "bytecount"
   }
+
 }
