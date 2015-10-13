@@ -65,7 +65,9 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 
 ### Dashboards
 
-- Storm
+- Storm General
+- Storm Bolts
+- Storm Spouts
 
 ### References
 [Apache Storm UI REST API Reference](https://github.com/apache/storm/blob/master/STORM-UI-REST-API.md)
