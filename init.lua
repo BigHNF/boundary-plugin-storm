@@ -59,14 +59,18 @@ local function createTopologySummaryDataSource(item)
 
   local ds = WebRequestDataSource:new(options)
   ds:chain(function (context, callback, data, extra)
-    -- First emit some metrics.
-    callback(data, extra)
+     if not isHttpSuccess(extra.status_code) then
+      return nil
+    end
 
     local success, parsed = parseJson(data)
     if not success then
       return nil
     end
- 
+
+   -- First emit some metrics.
+    callback(data, extra)
+
     local datasources = {}
     for _, topology in ipairs(parsed.topologies) do
       local ds_detail = createTopologyDetailDataSource(item, topology.id)
@@ -148,7 +152,9 @@ local function createPollers(params)
   for _, item in pairs(params.items) do
     local ds = createClusterSummaryDataSource(item)
     ds:chain(function (context, callback, data, extra)
-      callback(data, extra) 
+      if not isHttpSuccess(extra.status_code) then
+        return nil
+      end
       return { createTopologySummaryDataSource(item) }
     end)
     local poller = DataSourcePoller:new(item.pollInterval, ds)
