@@ -151,6 +151,38 @@
     "displayNameShort": "Storm SpoTsk",
     "unit": "number"
   },
+  "STORM_CLUSTER_SUPERVISORS": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Number of supervisor on the cluster.",
+    "displayName": "Storm Supervisors",
+    "displayNameShort": "Storm Supervisors",
+    "unit": "number"
+  },
+  "STORM_TOPOLOGY_TASKS_TOTAL": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Number of Tasks running on topologies.",
+    "displayName": "Storm Topology Tasks",
+    "displayNameShort": "Storm Topology Tasks",
+    "unit": "number"
+  },
+  "STORM_TOPOLOGY_WORKERS_TOTAL": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Number of Workers running on topologies.",
+    "displayName": "Storm Topology Workers",
+    "displayNameShort": "Storm Top. Workers",
+    "unit": "number"
+  },
+  "STORM_TOPOLOGY_EXECUTORS_TOTAL": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Number of Executors running on topologies.",
+    "displayName": "Storm Topology Executors",
+    "displayNameShort": "Storm Top. Execs",
+    "unit": "number"
+  },
   "STORM_TOPOLOGY_ACKED": {
     "defaultAggregate": "avg",
     "defaultResolutionMS": 1000,

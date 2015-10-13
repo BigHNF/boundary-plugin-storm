@@ -1,214 +1,201 @@
+-- Copyright 2015 BMC Software, Inc.
 --
--- [boundary.com] Couchbase Lua Plugin
--- [author] Valeriu Paloş <me@vpalos.com>
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
 --
+--    http://www.apache.org/licenses/LICENSE-2.0
 --
---
---
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 
---
--- Imports.
---
-local dns   = require('dns')
-local fs    = require('fs')
-local json  = require('json')
-local http  = require('http')
-local math  = require('math')
-local os    = require('os')
-local timer = require('timer')
-local tools = require('tools')
-local url   = require('url')
+local framework = require('framework')
+local Plugin = framework.Plugin
+local WebRequestDataSource = framework.WebRequestDataSource
+local DataSourcePoller = framework.DataSourcePoller
+local PollerCollection = framework.PollerCollection
+local auth = framework.util.auth
+local ipack = framework.util.ipack
+local parseJson = framework.util.parseJson
+local isHttpSuccess = framework.util.isHttpSuccess
+local clone = framework.table.clone
+local notEmpty = framework.string.notEmpty
 
---
--- Initialize.
---
-local _parameters        = json.parse(fs.readFileSync('param.json')) or {}
+local params = framework.params
 
-local _serverHost        = _parameters.serverHost or 'localhost'
-local _serverPort        = _parameters.serverPort or 8080
-local _serverApi         = _parameters.serverApi or '/api/v1' -- Undocumented, but more future-proof.
+local CLUSTER_SUMMARY_KEY = 'cluster_summary'
+local TOPOLOGY_SUMMARY_KEY = 'topology_summary'
+local TOPOLOGY_DETAIL_KEY = 'topology_detail'
 
-local _pollRetryCount    = tools.fence(tonumber(_parameters.pollRetryCount) or    3,   0, 1000)
-local _pollRetryDelay    = tools.fence(tonumber(_parameters.pollRetryDelay) or  100,   0, 1000 * 60 * 60)
-local _pollInterval      = tools.fence(tonumber(_parameters.pollInterval)   or 5000, 100, 1000 * 60 * 60 * 24)
-
-local _showAllTopologies = _parameters.showAllTopologies ~= false
-local _showTopologies    = _parameters.showTopologies or {}
-local _showBolts         = _parameters.showBolts ~= false
-local _showSpouts        = _parameters.showSpouts ~= false
-
--- Select topologies.
-_showTopologies.mt = { __index = {} }
-setmetatable(_showTopologies, _showTopologies.mt)
-for _, item in ipairs(_showTopologies) do
-  _showTopologies.mt.__index[item] = true
+local function createOptions(config)
+  local options = {}
+  options.host = config.host
+  options.port = config.port
+  options.auth = auth(config.username, config.password)
+  options.path = '/api/v1'
+  return options 
 end
 
---
--- Metrics source.
---
-local _source =
-  (type(_parameters.source) == 'string' and _parameters.source:gsub('%s+', '') ~= '' and _parameters.source) or
-   os.hostname()
+local function createClusterSummaryDataSource(item)
+  local options = createOptions(item)
+  options.path = options.path .. '/cluster/summary'
+  options.meta = {CLUSTER_SUMMARY_KEY, item}
+  return WebRequestDataSource:new(options)
+end
 
---
--- Get a JSON data set from the server at the given URL (includes query string)
---
-local remaining = 0
-function retrieve(location, callback)
-  remaining = remaining + 1
-  local _pollRetryRemaining = _pollRetryCount
+local function createTopologyDetailDataSource(item, topology_id)
+  local options = createOptions(item) 
+  options.path = options.path .. ('/topology/%s?window=1'):format(topology_id)
+  options.meta = {TOPOLOGY_DETAIL_KEY, item}
+  return WebRequestDataSource:new(options)
+end
 
-  local options = url.parse(('http://%s:%d%s%s'):format(_serverHost, _serverPort, _serverApi, location))
-  options.headers = {
-    ['Accept'] = 'application/json',
-    ['Connection'] = 'keep-alive'
-  }
+local function createTopologySummaryDataSource(item)
+  local options = createOptions(item)
+  options.path = options.path .. '/topology/summary'
+  options.meta = {TOPOLOGY_SUMMARY_KEY, item}
 
-  function handler(response)
-    if (response.status_code ~= 200) then
-      return retry("Unexpected status code " .. response.status_code .. ", should be 200!")
+  local ds = WebRequestDataSource:new(options)
+  ds:chain(function (context, callback, data, extra)
+     if not isHttpSuccess(extra.status_code) then
+      return nil
     end
 
-    local data = {}
-    response:on('data', function(chunk)
-      table.insert(data, chunk)
-    end)
-    response:on('end', function()
-      local success, json = pcall(json.parse, table.concat(data))
+    local success, parsed = parseJson(data)
+    if not success then
+      return nil
+    end
 
-      if success then
-        remaining = remaining - 1
-        callback(json)
-      else
-        retry("Unable to parse incoming data as a valid JSON value!")
+   -- First emit some metrics.
+    callback(data, extra)
+
+    local datasources = {}
+    for _, topology in ipairs(parsed.topologies) do
+      if not item.topologies_filter or item.topologies_filter[topology.name] or item.topologies_filter[topology.id] then
+        local ds_detail = createTopologyDetailDataSource(item, topology.id)
+        ds_detail:propagate('error', context)
+        table.insert(datasources, ds_detail)
       end
-
-      response:destroy()
-    end)
-
-    response:once('error', retry)
-  end
-
-  function retry(result)
-    if _pollRetryRemaining > 0 then
-      _pollRetryRemaining = _pollRetryRemaining - 1
     end
+    return datasources
+  end)
 
-    if _pollRetryRemaining == 0 then
-      return error(tostring(result.message or result))
-    end
-
-    timer.setTimeout(_pollRetryDelay, perform)
-  end
-
-  function perform()
-    local request = http.request(options, handler)
-    request:once('error', retry)
-    request:done()
-  end
-
-  perform()
+  return ds
 end
 
---
--- Schedule poll.
---
-function schedule()
-  timer.setTimeout(_pollInterval, poll)
+local function topologySummaryExtractor (data, item)
+  local result = {}
+  local metric = function (...) ipack(result, ...) end
+  metric('STORM_CLUSTER_TOPOLOGIES',  #data.topologies, nil, item.source)
+  return result
 end
 
---
--- Print a metric.
---
-function metric(stamp, id, value, source)
-  print(string.format('%s %s %s %d', id, value or 0, source or _source, stamp))
+local function clusterSummaryExtractor (data, item)
+  local result = {}
+  local metric = function (...) ipack(result, ...) end
+  metric('STORM_CLUSTER_EXECUTORS', data.executorsTotal, nil, item.source)
+  metric('STORM_CLUSTER_SLOTS_TOTAL', data.slotsTotal, nil, item.source)
+  metric('STORM_CLUSTER_SLOTS_USED',  data.slotsUsed, nil, item.source)
+  metric('STORM_CLUSTER_TASKS_TOTAL', data.tasksTotal, nil, item.source)
+  metric('STORM_CLUSTER_SUPERVISORS', data.supervisors, nil, item.source)
+  return result
 end
 
---
--- Collect topology metrics per 1 second time window.
---
-function produceTopology(stamp, id)
-  retrieve(('/topology/%s?window=1'):format(id, _pollInterval), function(topology)
+local function topologyDetailExtractor(topology, item)
+    local result = {}
+    local metric = function (...) ipack(result, ...) end
 
     -- Topology-level metrics.
-    local tsrc = _source .. '/' .. id
-    metric(stamp, 'STORM_TOPOLOGY_EMITTED',         topology.topologyStats.emitted,                   tsrc)
-    metric(stamp, 'STORM_TOPOLOGY_TRANSFERRED',     topology.topologyStats.transferred,               tsrc)
-    metric(stamp, 'STORM_TOPOLOGY_ACKED',           topology.topologyStats.acked,                     tsrc)
-    metric(stamp, 'STORM_TOPOLOGY_FAILED',          topology.topologyStats.failed,                    tsrc)
-    metric(stamp, 'STORM_TOPOLOGY_COMPLETELATENCY', tonumber(topology.topologyStats.completeLatency), tsrc)
+    local tsrc = item.source .. '.' .. topology.name
+    metric('STORM_TOPOLOGY_TASKS_TOTAL', topology.tasksTotal, nil, tsrc)
+    metric('STORM_TOPOLOGY_WORKERS_TOTAL', topology.workersTotal, nil, tsrc)
+    metric('STORM_TOPOLOGY_EXECUTORS_TOTAL', topology.executorsTotal, nil, tsrc)
 
-    if _showBolts then
-      for _, bolt in ipairs(topology.bolts) do
-
-        -- Bolt-level metrics.
-        local bsrc = tsrc .. "/bolt-" .. bolt.boltId
-        metric(stamp, 'STORM_BOLT_EXECUTORS', bolt.executors,                     bsrc)
-        metric(stamp, 'STORM_BOLT_TASKS', bolt.tasks,                             bsrc)
-        metric(stamp, 'STORM_BOLT_EMITTED', bolt.emitted,                         bsrc)
-        metric(stamp, 'STORM_BOLT_ACKED', bolt.acked,                             bsrc)
-        metric(stamp, 'STORM_BOLT_FAILED', bolt.failed,                           bsrc)
-        metric(stamp, 'STORM_BOLT_CAPACITY', tonumber(bolt.capacity),             bsrc)
-        metric(stamp, 'STORM_BOLT_EXECUTELATENCY', tonumber(bolt.executeLatency), bsrc)
-        metric(stamp, 'STORM_BOLT_PROCESSLATENCY', tonumber(bolt.processLatency), bsrc)
-      end
-    end
-
-    if _showSpouts then
+    -- Spout-level metrics.
+    if item.show_spouts then
       for _, spout in ipairs(topology.spouts) do
-
-        -- Spout-level metrics.
-        local ssrc = tsrc .. "/spout-" .. spout.spoutId
-        metric(stamp, 'STORM_SPOUT_EXECUTORS', spout.executors,                       ssrc)
-        metric(stamp, 'STORM_SPOUT_TASKS', spout.tasks,                               ssrc)
-        metric(stamp, 'STORM_SPOUT_EMITTED', spout.emitted,                           ssrc)
-        metric(stamp, 'STORM_SPOUT_ACKED', spout.acked,                               ssrc)
-        metric(stamp, 'STORM_SPOUT_FAILED', spout.failed,                             ssrc)
-        metric(stamp, 'STORM_SPOUT_COMPLETELATENCY', tonumber(spout.completeLatency), ssrc)
+        local ssrc = tsrc .. ".spout-" .. spout.spoutId
+        metric('STORM_SPOUT_EXECUTORS', spout.executors, nil, ssrc)
+        metric('STORM_SPOUT_TASKS', spout.tasks, nil, ssrc)
+        metric('STORM_SPOUT_EMITTED', spout.emitted, nil, ssrc)
+        metric('STORM_SPOUT_ACKED', spout.acked, nil, ssrc)
+        metric('STORM_SPOUT_FAILED', spout.failed, nil, ssrc)
+        metric('STORM_SPOUT_COMPLETELATENCY', tonumber(spout.completeLatency), nil, ssrc)
       end
     end
-  end)
+
+    -- Bolt-level metrics.
+    if item.show_bolts then
+      for _, bolt in ipairs(topology.bolts) do
+        local bsrc = tsrc .. ".bolt-" .. bolt.boltId
+        metric('STORM_BOLT_EXECUTORS', bolt.executors, nil, bsrc)
+        metric('STORM_BOLT_TASKS', bolt.tasks, nil, bsrc)
+        metric('STORM_BOLT_EMITTED', bolt.emitted, nil, bsrc)
+        metric('STORM_BOLT_ACKED', bolt.acked, nil, bsrc)
+        metric('STORM_BOLT_FAILED', bolt.failed, nil, bsrc)
+        metric('STORM_BOLT_CAPACITY', tonumber(bolt.capacity), nil, bsrc)
+        metric('STORM_BOLT_EXECUTELATENCY', tonumber(bolt.executeLatency), nil, bsrc)
+        metric('STORM_BOLT_PROCESSLATENCY', tonumber(bolt.processLatency), nil, bsrc)
+      end
+    end
+
+    return result
 end
 
+local extractors_map = {}
+extractors_map[CLUSTER_SUMMARY_KEY] = clusterSummaryExtractor
+extractors_map[TOPOLOGY_SUMMARY_KEY] = topologySummaryExtractor
+extractors_map[TOPOLOGY_DETAIL_KEY] = topologyDetailExtractor
 
---
--- Collect cluster metrics.
---
-function poll()
-  local stamp = os.time()
+local function createPollers(params)
+  local pollers = PollerCollection:new()
+  for _, item in pairs(params.items) do
 
-  -- Ensure previous collections have ended.
-  if remaining > 0 then
-    return schedule()
+    local topologies_map = {}
+    local count = 0
+    for i, v in ipairs(item.topologies_filter) do
+      if notEmpty(v) then
+        topologies_map[v] = true;
+        count = count + 1
+      end
+    end
+    item.topologies_filter = (count > 0) and topologies_map or nil
+
+    local ds = createClusterSummaryDataSource(item)
+    ds:chain(function (context, callback, data, extra)
+      if not isHttpSuccess(extra.status_code) then
+        return nil
+      end
+      return { createTopologySummaryDataSource(item) }
+    end)
+    local poller = DataSourcePoller:new(item.pollInterval, ds)
+    pollers:add(poller)
+  end
+  return pollers
+end
+
+local pollers = createPollers(params)
+local plugin = Plugin:new(params, pollers)
+
+function plugin:onParseValues(data, extra)
+
+  if not isHttpSuccess(extra.status_code) then
+    self:emitEvent('error', ('Http request returned status code %s instead of OK. Please verify configuration.'):format(extra.status_code))
+    return
   end
 
-  -- Trigger collection at cluster-level.
-  retrieve('/cluster/summary', function(cluster)
-    metric(stamp, 'STORM_CLUSTER_EXECUTORS',   cluster.executorsTotal)
-    metric(stamp, 'STORM_CLUSTER_SLOTS_TOTAL', cluster.slotsTotal)
-    metric(stamp, 'STORM_CLUSTER_SLOTS_USED',  cluster.slotsUsed)
-    metric(stamp, 'STORM_CLUSTER_TASKS_TOTAL', cluster.tasksTotal)
-  end)
+  local success, parsed = parseJson(data)
+  if not success then
+    self:emitEvent('error', 'Cannot parse metrics. Please verify configuration.') 
+    return
+  end
 
-  -- Trigger topologies.
-  retrieve('/topology/summary', function(data)
-    metric(stamp, 'STORM_CLUSTER_TOPOLOGIES',  #data.topologies)
-
-    for _, topology in ipairs(data.topologies) do
-      if _showAllTopologies or _showTopologies[topology.name] or _showTopologies[topology.id] then
-        process.nextTick(function()
-          produceTopology(stamp, topology.id)
-        end)
-      end
-    end
-  end)
-
-  -- Reschedule.
-  schedule()
+  local key, item = unpack(extra.info)
+  local extractor = extractors_map[key]
+  return extractor(parsed, item)
 end
 
---
--- Start.
---
-poll()
+plugin:run()
