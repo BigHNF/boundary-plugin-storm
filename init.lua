@@ -22,6 +22,7 @@ local ipack = framework.util.ipack
 local parseJson = framework.util.parseJson
 local isHttpSuccess = framework.util.isHttpSuccess
 local clone = framework.table.clone
+local notEmpty = framework.string.notEmpty
 
 local params = framework.params
 
@@ -73,9 +74,11 @@ local function createTopologySummaryDataSource(item)
 
     local datasources = {}
     for _, topology in ipairs(parsed.topologies) do
-      local ds_detail = createTopologyDetailDataSource(item, topology.id)
-      ds_detail:propagate('error', context)
-      table.insert(datasources, ds_detail)
+      if not item.topologies_filter or item.topologies_filter[topology.name] or item.topologies_filter[topology.id] then
+        local ds_detail = createTopologyDetailDataSource(item, topology.id)
+        ds_detail:propagate('error', context)
+        table.insert(datasources, ds_detail)
+      end
     end
     return datasources
   end)
@@ -150,6 +153,17 @@ extractors_map[TOPOLOGY_DETAIL_KEY] = topologyDetailExtractor
 local function createPollers(params)
   local pollers = PollerCollection:new()
   for _, item in pairs(params.items) do
+
+    local topologies_map = {}
+    local count = 0
+    for i, v in ipairs(item.topologies_filter) do
+      if notEmpty(v) then
+        topologies_map[v] = true;
+        count = count + 1
+      end
+    end
+    item.topologies_filter = (count > 0) and topologies_map or nil
+
     local ds = createClusterSummaryDataSource(item)
     ds:chain(function (context, callback, data, extra)
       if not isHttpSuccess(extra.status_code) then

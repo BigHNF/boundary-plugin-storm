@@ -19,7 +19,7 @@
       "username":"",
       "password":"",
       "topologies_filter":[
-        ""
+        "inexistent-topology"
       ],
       "show_bolts":true,
       "show_spouts":true,
