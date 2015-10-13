@@ -1,13 +1,31 @@
 {
-	"items": [
-	{
-		"host" : "127.0.0.1",
-		"port" : 8080,
-		"topologies_filter": [],
-		"show_spouts" : true,
-		"show_bolts": true,
-		"pollInterval" : 1000,
-		"source" : "storm-test"
-	}],
-	"pollInterval" : 1000
+  "items":[
+    {
+      "host":"127.0.0.1",
+      "port":8080,
+      "username":"",
+      "password":"",
+      "topologies_filter":[
+        ""
+      ],
+      "show_bolts":true,
+      "show_spouts":true,
+      "pollInterval":1000,
+      "source":"storm-dev1"
+    },
+    {
+      "host":"127.0.0.1",
+      "port":8080,
+      "username":"",
+      "password":"",
+      "topologies_filter":[
+        ""
+      ],
+      "show_bolts":true,
+      "show_spouts":true,
+      "pollInterval":1000,
+      "source":"storm-dev2"
+    }
+  ],
+  "pollInterval":1000
 }

@@ -23,9 +23,7 @@ local parseJson = framework.util.parseJson
 local isHttpSuccess = framework.util.isHttpSuccess
 local clone = framework.table.clone
 
-local params = table.remove(framework.params.items, 1)
-local ds
-local ds_topologies
+local params = framework.params
 
 local CLUSTER_SUMMARY_KEY = 'cluster_summary'
 local TOPOLOGY_SUMMARY_KEY = 'topology_summary'
@@ -41,23 +39,23 @@ local function createOptions(config)
 end
 
 local function createClusterSummaryDataSource(item)
-  local options = createOptions(params)
+  local options = createOptions(item)
   options.path = options.path .. '/cluster/summary'
-  options.meta = CLUSTER_SUMMARY_KEY 
+  options.meta = {CLUSTER_SUMMARY_KEY, item}
   return WebRequestDataSource:new(options)
 end
 
-local function createTopologyDetailDataSource(topology_id)
-  local options = createOptions(params) 
+local function createTopologyDetailDataSource(item, topology_id)
+  local options = createOptions(item) 
   options.path = options.path .. ('/topology/%s?window=1'):format(topology_id)
-  options.meta = TOPOLOGY_DETAIL_KEY
+  options.meta = {TOPOLOGY_DETAIL_KEY, item}
   return WebRequestDataSource:new(options)
 end
 
-local function createTopologySummaryDataSource()
-  local options = createOptions(params)
+local function createTopologySummaryDataSource(item)
+  local options = createOptions(item)
   options.path = options.path .. '/topology/summary'
-  options.meta = TOPOLOGY_SUMMARY_KEY
+  options.meta = {TOPOLOGY_SUMMARY_KEY, item}
 
   local ds = WebRequestDataSource:new(options)
   ds:chain(function (context, callback, data, extra)
@@ -71,7 +69,7 @@ local function createTopologySummaryDataSource()
  
     local datasources = {}
     for _, topology in ipairs(parsed.topologies) do
-      local ds_detail = createTopologyDetailDataSource(topology.id)
+      local ds_detail = createTopologyDetailDataSource(item, topology.id)
       ds_detail:propagate('error', context)
       table.insert(datasources, ds_detail)
     end
@@ -81,36 +79,36 @@ local function createTopologySummaryDataSource()
   return ds
 end
 
-local function topologySummaryExtractor (data)
+local function topologySummaryExtractor (data, item)
   local result = {}
   local metric = function (...) ipack(result, ...) end
-  metric('STORM_CLUSTER_TOPOLOGIES',  #data.topologies)
+  metric('STORM_CLUSTER_TOPOLOGIES',  #data.topologies, nil, item.source)
   return result
 end
 
-local function clusterSummaryExtractor (data)
+local function clusterSummaryExtractor (data, item)
   local result = {}
   local metric = function (...) ipack(result, ...) end
-  metric('STORM_CLUSTER_EXECUTORS', data.executorsTotal)
-  metric('STORM_CLUSTER_SLOTS_TOTAL', data.slotsTotal)
-  metric('STORM_CLUSTER_SLOTS_USED',  data.slotsUsed)
-  metric('STORM_CLUSTER_TASKS_TOTAL', data.tasksTotal)
-  metric('STORM_CLUSTER_SUPERVISORS', data.supervisors)
+  metric('STORM_CLUSTER_EXECUTORS', data.executorsTotal, nil, item.source)
+  metric('STORM_CLUSTER_SLOTS_TOTAL', data.slotsTotal, nil, item.source)
+  metric('STORM_CLUSTER_SLOTS_USED',  data.slotsUsed, nil, item.source)
+  metric('STORM_CLUSTER_TASKS_TOTAL', data.tasksTotal, nil, item.source)
+  metric('STORM_CLUSTER_SUPERVISORS', data.supervisors, nil, item.source)
   return result
 end
 
-local function topologyDetailExtractor(topology)
+local function topologyDetailExtractor(topology, item)
     local result = {}
     local metric = function (...) ipack(result, ...) end
 
     -- Topology-level metrics.
-    local tsrc = params.source .. '.' .. topology.id
+    local tsrc = item.source .. '.' .. topology.id
     metric('STORM_TOPOLOGY_TASKS_TOTAL', topology.tasksTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_WORKERS_TOTAL', topology.workersTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_EXECUTORS_TOTAL', topology.executorsTotal, nil, tsrc)
 
     -- Spout-level metrics.
-    if params.show_spouts then
+    if item.show_spouts then
       for _, spout in ipairs(topology.spouts) do
         local ssrc = tsrc .. ".spout-" .. spout.spoutId
         metric('STORM_SPOUT_EXECUTORS', spout.executors, nil, ssrc)
@@ -123,7 +121,7 @@ local function topologyDetailExtractor(topology)
     end
 
     -- Bolt-level metrics.
-    if params.show_bolts then
+    if item.show_bolts then
       for _, bolt in ipairs(topology.bolts) do
         local bsrc = tsrc .. ".bolt-" .. bolt.boltId
         metric('STORM_BOLT_EXECUTORS', bolt.executors, nil, bsrc)
@@ -145,12 +143,22 @@ extractors_map[CLUSTER_SUMMARY_KEY] = clusterSummaryExtractor
 extractors_map[TOPOLOGY_SUMMARY_KEY] = topologySummaryExtractor
 extractors_map[TOPOLOGY_DETAIL_KEY] = topologyDetailExtractor
 
-ds = createClusterSummaryDataSource()
-ds:chain(function (context, callback, data, extra)
-  callback(data, extra) 
-  return { createTopologySummaryDataSource() }
-end)
-local plugin = Plugin:new(params, ds)
+local function createPollers(params)
+  local pollers = PollerCollection:new()
+  for _, item in pairs(params.items) do
+    local ds = createClusterSummaryDataSource(item)
+    ds:chain(function (context, callback, data, extra)
+      callback(data, extra) 
+      return { createTopologySummaryDataSource(item) }
+    end)
+    local poller = DataSourcePoller:new(item.pollInterval, ds)
+    pollers:add(poller)
+  end
+  return pollers
+end
+
+local pollers = createPollers(params)
+local plugin = Plugin:new(params, pollers)
 
 function plugin:onParseValues(data, extra)
 
@@ -161,12 +169,13 @@ function plugin:onParseValues(data, extra)
 
   local success, parsed = parseJson(data)
   if not success then
-    self:emitEvent('error', 'Can not parse metrics. Please verify configuration.') 
+    self:emitEvent('error', 'Cannot parse metrics. Please verify configuration.') 
     return
   end
 
-  local extractor = extractors_map[extra.info]
-  return extractor(parsed)
+  local key, item = unpack(extra.info)
+  local extractor = extractors_map[key]
+  return extractor(parsed, item)
 end
 
 plugin:run()
