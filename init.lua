@@ -109,7 +109,7 @@ local function topologyDetailExtractor(topology, item)
     local metric = function (...) ipack(result, ...) end
 
     -- Topology-level metrics.
-    local tsrc = item.source .. '.' .. topology.id
+    local tsrc = item.source .. '.' .. topology.name
     metric('STORM_TOPOLOGY_TASKS_TOTAL', topology.tasksTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_WORKERS_TOTAL', topology.workersTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_EXECUTORS_TOTAL', topology.executorsTotal, nil, tsrc)
