@@ -104,7 +104,7 @@ local function topologyDetailExtractor(topology)
     local metric = function (...) ipack(result, ...) end
 
     -- Topology-level metrics.
-    local tsrc = params.source .. '/' .. topology.id
+    local tsrc = params.source .. '.' .. topology.id
     metric('STORM_TOPOLOGY_TASKS_TOTAL', topology.tasksTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_WORKERS_TOTAL', topology.workersTotal, nil, tsrc)
     metric('STORM_TOPOLOGY_EXECUTORS_TOTAL', topology.executorsTotal, nil, tsrc)
@@ -112,7 +112,7 @@ local function topologyDetailExtractor(topology)
     -- Spout-level metrics.
     if params.show_spouts then
       for _, spout in ipairs(topology.spouts) do
-        local ssrc = tsrc .. "/spout-" .. spout.spoutId
+        local ssrc = tsrc .. ".spout-" .. spout.spoutId
         metric('STORM_SPOUT_EXECUTORS', spout.executors, nil, ssrc)
         metric('STORM_SPOUT_TASKS', spout.tasks, nil, ssrc)
         metric('STORM_SPOUT_EMITTED', spout.emitted, nil, ssrc)
@@ -125,7 +125,7 @@ local function topologyDetailExtractor(topology)
     -- Bolt-level metrics.
     if params.show_bolts then
       for _, bolt in ipairs(topology.bolts) do
-        local bsrc = tsrc .. "/bolt-" .. bolt.boltId
+        local bsrc = tsrc .. ".bolt-" .. bolt.boltId
         metric('STORM_BOLT_EXECUTORS', bolt.executors, nil, bsrc)
         metric('STORM_BOLT_TASKS', bolt.tasks, nil, bsrc)
         metric('STORM_BOLT_EMITTED', bolt.emitted, nil, bsrc)
