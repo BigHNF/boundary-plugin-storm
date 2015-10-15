@@ -1,6 +1,6 @@
 # TrueSightPulse Storm Plugin
 
-Tracks Apache Storm metrics by polling the Storm UI Rest API "http://localhost:8080/" (configurable setting).
+Tracks Apache Storm metrics by polling the Storm UI Rest API.
 
 ### Prerequisites
 
@@ -17,7 +17,7 @@ Tracks Apache Storm metrics by polling the Storm UI Rest API "http://localhost:8
 
 ### Plugin Setup
 
-In order for the plugin to collect statistics from Storm you need to ensure that the Storm UI service is running. By default the Storm UI service runs on the same node as the Storm Nimbus (master) service.
+In order for the plugin to collect statistics from Storm you need to ensure that the Storm UI service is running. By default the service runs on the same node as the Storm Nimbus (master) service.
 
 ### Plugin Configuration Fields
 
@@ -27,11 +27,11 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 | Port          | Port of the Storm UI service |
 | Username      | Username to access the Storm UI service |
 | Password      | Password to access the Storm UI service |
-| Topologies Filter | Select topologies (by name or id) to show metrics for (default: []). If not set, it will shows al topologies. |
-| Show Bolts          |showBolts         |boolean |Show metrics for each bolt in each topology (default: true).                            |
-| Show Spouts         |showSpouts        |boolean |Show metrics for each spout in each topology (default: true).                           |
-| Source        | The Source to display in the legend for the metrics data.  It will default to the hostname of the server.|
-| Poll Interval | How often should the plugin poll for metrics. |
+| Topologies Filter | Select topologies (by name or id) to show metrics for. If not set, it will shows all topologies |
+| Show Bolts          | Show metrics for each bolt in each topology (default: true)                            |
+| Show Spouts         | Show metrics for each spout in each topology (default: true) |                           
+| Source        | The Source to display in the legend for the metrics data.  It will default to the hostname of the server |
+| Poll Interval | How often should the plugin poll for metrics |
 
 ### Metrics Collected
 
@@ -42,11 +42,10 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 |STORM_CLUSTER_SLOTS_TOTAL      |Total number of available worker slots on the cluster.                      |
 |STORM_CLUSTER_SLOTS_USED       |Number of worker slots used on the cluster.                                 |
 |STORM_CLUSTER_TASKS_TOTAL      |Total number of tasks on the cluster.                                       |
-|STORM_TOPOLOGY_EMITTED         |Number of messages emitted per topology per second.                         |
-|STORM_TOPOLOGY_TRANSFERRED     |Number messages transferred per topology per second.                        |
-|STORM_TOPOLOGY_ACKED           |Number messages acked per topology per second.                              |
-|STORM_TOPOLOGY_FAILED          |Number messages failed per topology per second.                             |
-|STORM_TOPOLOGY_COMPLETELATENCY |Total latency for processing messages per topology per second.              |
+|STORM_CLUSTER_SUPERVISORS      |Total number of supervisors on the cluster.					             |
+|STORM_TOPOLOGY_TASKS_TOTAL     |Number of Tasks per toplogy.                                                |
+|STORM_TOPOLOGY_WORKERS_TOTAL   |Number of Workers per topolgy.                                              |
+|STORM_TOPOLOGY_EXECUTORS_TOTAL |Number of executors per topology.                                           |
 |STORM_BOLT_EXECUTORS           |Number of executor tasks in the bolt component.                             |
 |STORM_BOLT_TASKS               |Number of instances of bolt.                                                |
 |STORM_BOLT_EMITTED             |Number of tuples emitted per bolt per second.                               |
@@ -62,7 +61,6 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 |STORM_SPOUT_FAILED             |Number of messages failed per spout per second.                             |
 |STORM_SPOUT_COMPLETELATENCY    |Total latency for processing the message per spout per second.              |
 
-
 ### Dashboards
 
 - Storm General
@@ -71,4 +69,3 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 
 ### References
 [Apache Storm UI REST API Reference](https://github.com/apache/storm/blob/master/STORM-UI-REST-API.md)
-
