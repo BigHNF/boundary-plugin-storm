@@ -169,6 +169,14 @@ local function createPollers(params)
       if not isHttpSuccess(extra.status_code) then
         return nil
       end
+
+      local success, parsed = parseJson(data)
+      if not success then
+        return nil
+      end
+
+      callback(data, extra)
+
       return { createTopologySummaryDataSource(item) }
     end)
     local poller = DataSourcePoller:new(item.pollInterval, ds)
