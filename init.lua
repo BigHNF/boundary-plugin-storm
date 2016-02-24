@@ -48,7 +48,7 @@ end
 
 local function createTopologyDetailDataSource(item, topology_id)
   local options = createOptions(item) 
-  options.path = options.path .. ('/topology/%s?window=1'):format(topology_id)
+  options.path = options.path .. ('/topology/%s?window=600'):format(topology_id)
   options.meta = {TOPOLOGY_DETAIL_KEY, item}
   return WebRequestDataSource:new(options)
 end
