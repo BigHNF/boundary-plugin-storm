@@ -6,7 +6,7 @@ Tracks Apache Storm metrics by polling the Storm UI Rest API.
 
 |     OS    | Linux | Windows | SmartOS | OS X |
 |:----------|:-----:|:-------:|:-------:|:----:|
-| Supported |   v   |    v    |    v    |  v   |
+| Supported |   v   |    -    |    -    |  -   |
 
 * This plugin is compatible with Apache Storm 0.9.3 or later.
 
@@ -68,4 +68,5 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 - Storm Spouts
 
 ### References
-[Apache Storm UI REST API Reference](https://github.com/apache/storm/blob/master/STORM-UI-REST-API.md)
+
+- Apache Storm UI REST API Reference.
