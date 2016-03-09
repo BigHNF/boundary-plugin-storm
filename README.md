@@ -69,4 +69,4 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 
 ### References
 
-- Apache Storm UI REST API Reference.
+- Apache Storm UI REST API Reference - STORM-UI-REST-API.md
