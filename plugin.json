@@ -120,7 +120,7 @@
       "name": "pollInterval",
       "description": "How often (in milliseconds) should the plugin poll for metrics",
       "type" : "integer",
-      "default" : 1000,
+      "default" : 10000,
       "required" : true 
     },
     {
