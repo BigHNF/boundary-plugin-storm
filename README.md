@@ -68,4 +68,4 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 - Storm Spouts
 
 ### References
-- [Apache Storm UI REST API Reference](http://storm.apache.org/)
+- [Apache Storm Documentation.](http://storm.apache.org/documentation.html)
