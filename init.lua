@@ -48,7 +48,7 @@ end
 
 local function createTopologyDetailDataSource(item, topology_id)
   local options = createOptions(item)
-  --Modified the window from 1 to 600. 1 was not valid value - PLIG-88.
+  --Modified the window from 1 to 600. 1 was not valid value.
   options.path = options.path .. ('/topology/%s?window=600'):format(topology_id)
   options.meta = {TOPOLOGY_DETAIL_KEY, item}
   return WebRequestDataSource:new(options)
@@ -171,14 +171,14 @@ local function createPollers(params)
         return nil
       end
 
-      --Code added to fix the issue PLUG-87 Start
+      --Code fix: Storm cluster metrics are not shown- Start.
       local success, parsed = parseJson(data)
       if not success then
         return nil
       end
 
       callback(data, extra)
-      --Code added to fix the issue PLUG-87 End.
+      --Code fix - End.
 
       return { createTopologySummaryDataSource(item) }
     end)
