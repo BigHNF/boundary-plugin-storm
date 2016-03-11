@@ -10,7 +10,7 @@
       ],
       "show_bolts":true,
       "show_spouts":true,
-      "pollInterval":1000,
+      "pollInterval":10000,
       "source":"storm-dev1"
     },
     {
@@ -23,9 +23,9 @@
       ],
       "show_bolts":true,
       "show_spouts":true,
-      "pollInterval":1000,
+      "pollInterval":10000,
       "source":"storm-dev2"
     }
   ],
-  "pollInterval":1000
+  "pollInterval":10000
 }
