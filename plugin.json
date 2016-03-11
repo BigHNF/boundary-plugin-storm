@@ -39,7 +39,7 @@
   "dashboards": [
     	{
 	    "name": "Storm General",
-	    "layout" : "d-w=4&d-h=3&d-pad=5&d-light=0&d-bg=000000&d-g-STORM_CLUSTER_EXECUTORS=1-0-1-1&d-g-STORM_CLUSTER_SLOTS_USED=2-0-1-1&d-g-STORM_CLUSTER_SLOTS_TOTAL=3-0-1-1&d-g-STORM_CLUSTER_TOPOLOGIES=0-0-1-1&d-g-STORM_CLUSTER_TASKS_TOTAL=0-1-1-1&d-g-STORM_TOPOLOGY_COMPLETELATENCY=0-2-1-1&d-g-STORM_TOPOLOGY_EMITTED=1-2-1-1&d-g-STORM_TOPOLOGY_WORKERS_TOTAL=1-1-1-1&d-g-STORM_TOPOLOGY_FAILED=3-2-1-1&d-g-STORM_TOPOLOGY_ACKED=2-2-1-1&d-g-STORM_TOPOLOGY_TASKS_TOTAL=2-1-1-1&d-g-STORM_TOPOLOGY_EXECUTORS_TOTAL=3-1-1-1"
+	    "layout" : "d-w=3&d-h=3&d-pad=5&d-light=0&d-bg=000000&d-g-STORM_CLUSTER_SLOTS_TOTAL=0-1-1-1&d-g-STORM_CLUSTER_TASKS_TOTAL=1-1-1-1&d-g-STORM_CLUSTER_SLOTS_USED=2-1-1-1&d-g-STORM_TOPOLOGY_EXECUTORS_TOTAL=0-2-1-1&d-g-STORM_TOPOLOGY_WORKERS_TOTAL=1-2-1-1&d-g-STORM_TOPOLOGY_TASKS_TOTAL=2-2-1-1&d-g-STORM_CLUSTER_SUPERVISORS=0-0-1-1&d-g-STORM_CLUSTER_EXECUTORS=2-0-1-1&d-g-STORM_CLUSTER_TOPOLOGIES=1-0-1-1"
 	},
     	{
 	    "name": "Storm Bolts",
@@ -120,7 +120,7 @@
       "name": "pollInterval",
       "description": "How often (in milliseconds) should the plugin poll for metrics",
       "type" : "integer",
-      "default" : 1000,
+      "default" : 10000,
       "required" : true 
     },
     {

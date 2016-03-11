@@ -182,45 +182,5 @@
     "displayName": "Storm Topology Executors",
     "displayNameShort": "Storm Top. Execs",
     "unit": "number"
-  },
-  "STORM_TOPOLOGY_ACKED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number messages acked per topology per second.",
-    "displayName": "Storm Topology Acked",
-    "displayNameShort": "Storm TopAck",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_COMPLETELATENCY": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Total latency for processing messages per topology per second.",
-    "displayName": "Storm Topology CompleteLatency",
-    "displayNameShort": "Storm TopComplete Lat",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_EMITTED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number of messages emitted per topology per second.",
-    "displayName": "Storm Topology Emitted",
-    "displayNameShort": "Storm TopEmit",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_FAILED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number messages failed per topology per second.",
-    "displayName": "Storm Topology Failed",
-    "displayNameShort": "Storm TopFail",
-    "unit": "number"
-  },
-  "STORM_TOPOLOGY_TRANSFERRED": {
-    "defaultAggregate": "avg",
-    "defaultResolutionMS": 1000,
-    "description": "Number messages transferred per topology per second.",
-    "displayName": "Storm Topology Transferred",
-    "displayNameShort": "Storm TopTrans",
-    "unit": "number"
   }
 }

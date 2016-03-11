@@ -47,8 +47,9 @@ local function createClusterSummaryDataSource(item)
 end
 
 local function createTopologyDetailDataSource(item, topology_id)
-  local options = createOptions(item) 
-  options.path = options.path .. ('/topology/%s?window=1'):format(topology_id)
+  local options = createOptions(item)
+  --Modified the window from 1 to 600. 1 was not valid value.
+  options.path = options.path .. ('/topology/%s?window=600'):format(topology_id)
   options.meta = {TOPOLOGY_DETAIL_KEY, item}
   return WebRequestDataSource:new(options)
 end
@@ -169,6 +170,16 @@ local function createPollers(params)
       if not isHttpSuccess(extra.status_code) then
         return nil
       end
+
+      --Code fix: Storm cluster metrics are not shown- Start.
+      local success, parsed = parseJson(data)
+      if not success then
+        return nil
+      end
+
+      callback(data, extra)
+      --Code fix - End.
+
       return { createTopologySummaryDataSource(item) }
     end)
     local poller = DataSourcePoller:new(item.pollInterval, ds)
