@@ -87,14 +87,14 @@ local function createTopologySummaryDataSource(item)
   return ds
 end
 
-local function topologySummaryExtractor (data, item)
+local function topologySummaryExtractor (data, item, self)
   local result = {}
   local metric = function (...) ipack(result, ...) end
   metric('STORM_CLUSTER_TOPOLOGIES',  #data.topologies, nil, item.source)
   return result
 end
 
-local function clusterSummaryExtractor (data, item)
+local function clusterSummaryExtractor (data, item, self)
   local result = {}
   local metric = function (...) ipack(result, ...) end
   metric('STORM_CLUSTER_EXECUTORS', data.executorsTotal, nil, item.source)
@@ -105,7 +105,7 @@ local function clusterSummaryExtractor (data, item)
   return result
 end
 
-local function topologyDetailExtractor(topology, item)
+local function topologyDetailExtractor(topology, item, self)
     local result = {}
     local metric = function (...) ipack(result, ...) end
 
@@ -125,6 +125,18 @@ local function topologyDetailExtractor(topology, item)
         metric('STORM_SPOUT_ACKED', spout.acked, nil, ssrc)
         metric('STORM_SPOUT_FAILED', spout.failed, nil, ssrc)
         metric('STORM_SPOUT_COMPLETELATENCY', tonumber(spout.completeLatency), nil, ssrc)
+
+	--Generating metrics and Event for lastError.
+	if(spout.lastError ~= '') then
+                self:emitEvent('error', ('Spout Error: %s'):format(spout.lastError), item.source, ssrc)
+        end
+
+	local spoutErrorLapsedSecs = spout.errorLapsedSecs
+        if(spoutErrorLapsedSecs ~= null and ((spoutErrorLapsedSecs * 1000) < item.pollInterval)) then
+                metric('STORM_SPOUT_LASTERROR', 1, nil, ssrc)
+        else
+                metric('STORM_SPOUT_LASTERROR', 0, nil, ssrc)
+        end
       end
     end
 
@@ -140,6 +152,18 @@ local function topologyDetailExtractor(topology, item)
         metric('STORM_BOLT_CAPACITY', tonumber(bolt.capacity), nil, bsrc)
         metric('STORM_BOLT_EXECUTELATENCY', tonumber(bolt.executeLatency), nil, bsrc)
         metric('STORM_BOLT_PROCESSLATENCY', tonumber(bolt.processLatency), nil, bsrc)
+
+	--Generating metrics and Event for lastError.
+	if(bolt.lastError ~= '') then
+                self:emitEvent('error', ('Bolt Error: %s'):format(bolt.lastError), item.source, bsrc)
+        end
+
+	local boltErrorLapsedSecs = bolt.errorLapsedSecs
+        if(boltErrorLapsedSecs ~= null and ((boltErrorLapsedSecs * 1000) < item.pollInterval)) then
+                metric('STORM_BOLT_LASTERROR', 1, nil, ssrc)
+        else
+                metric('STORM_BOLT_LASTERROR', 0, nil, ssrc)
+        end
       end
     end
 
@@ -206,7 +230,7 @@ function plugin:onParseValues(data, extra)
 
   local key, item = unpack(extra.info)
   local extractor = extractors_map[key]
-  return extractor(parsed, item)
+  return extractor(parsed, item, self)
 end
 
 plugin:run()
