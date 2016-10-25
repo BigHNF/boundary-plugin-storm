@@ -160,9 +160,9 @@ local function topologyDetailExtractor(topology, item, self)
 
 	local boltErrorLapsedSecs = bolt.errorLapsedSecs
         if(boltErrorLapsedSecs ~= null and ((boltErrorLapsedSecs * 1000) < item.pollInterval)) then
-                metric('STORM_BOLT_LASTERROR', 1, nil, ssrc)
+                metric('STORM_BOLT_LASTERROR', 1, nil, bsrc)
         else
-                metric('STORM_BOLT_LASTERROR', 0, nil, ssrc)
+                metric('STORM_BOLT_LASTERROR', 0, nil, bsrc)
         end
       end
     end
