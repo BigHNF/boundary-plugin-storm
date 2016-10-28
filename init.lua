@@ -36,6 +36,7 @@ local function createOptions(config)
   options.port = config.port
   options.auth = auth(config.username, config.password)
   options.path = '/api/v1'
+  options.wait_for_end = true
   return options 
 end
 
