@@ -1464,8 +1464,8 @@ function WebRequestDataSource:fetch(context, callback, params)
   end
 
   req:propagate('error', self, function (err)
-    err.context = self
-    err.params = params
+    --err.context = self
+    --err.params = params
     return err
   end)
   req:done()
