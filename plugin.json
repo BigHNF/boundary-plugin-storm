@@ -6,7 +6,7 @@
   "tags" : "storm", 
   "description": "Displays metrics from a Storm cluster",  
   "postExtract_lua" : "",
-  "command": "truesight_luvit init.lua",
+  "command": "truesight-luvit init.lua",
   "postExtract": "",
   "ignore": "",
   "icon": "icon.png",
