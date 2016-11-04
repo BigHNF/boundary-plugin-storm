@@ -63,6 +63,14 @@
     "displayNameShort": "Storm BolTsk",
     "unit": "number"
   },
+  "STORM_BOLT_LASTERROR": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Is bolt last error produced",
+    "displayName": "Storm Bolt Last-Error",
+    "displayNameShort": "Storm BolLstErr",
+    "unit": "number"
+  },
   "STORM_CLUSTER_EXECUTORS": {
     "defaultAggregate": "avg",
     "defaultResolutionMS": 1000,
@@ -149,6 +157,14 @@
     "description": "Total number of tasks for the spout.",
     "displayName": "Storm Spout Tasks",
     "displayNameShort": "Storm SpoTsk",
+    "unit": "number"
+  },
+  "STORM_SPOUT_LASTERROR": {
+    "defaultAggregate": "avg",
+    "defaultResolutionMS": 1000,
+    "description": "Is spout last error produced",
+    "displayName": "Storm Spout Last Error",
+    "displayNameShort": "Storm SpoLstErr",
     "unit": "number"
   },
   "STORM_CLUSTER_SUPERVISORS": {

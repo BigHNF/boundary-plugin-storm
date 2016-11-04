@@ -42,7 +42,7 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 |STORM_CLUSTER_SLOTS_TOTAL      |Total number of available worker slots on the cluster.                      |
 |STORM_CLUSTER_SLOTS_USED       |Number of worker slots used on the cluster.                                 |
 |STORM_CLUSTER_TASKS_TOTAL      |Total number of tasks on the cluster.                                       |
-|STORM_CLUSTER_SUPERVISORS      |Total number of supervisors on the cluster.					             |
+|STORM_CLUSTER_SUPERVISORS      |Total number of supervisors on the cluster.			             |
 |STORM_TOPOLOGY_TASKS_TOTAL     |Number of Tasks per toplogy.                                                |
 |STORM_TOPOLOGY_WORKERS_TOTAL   |Number of Workers per topolgy.                                              |
 |STORM_TOPOLOGY_EXECUTORS_TOTAL |Number of executors per topology.                                           |
@@ -54,12 +54,20 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 |STORM_BOLT_CAPACITY            |Number of messages executed * average execute latency per second.           |
 |STORM_BOLT_EXECUTELATENCY      |Average time to run the execute method of the bolt per second.              |
 |STORM_BOLT_PROCESSLATENCY      |Average time of the bolt to ack a message after it was received per second. |
+|STORM_BOLT_LASTERROR           |1 if an error / exception was generated, 0 otherwise.                       |
 |STORM_SPOUT_EXECUTORS          |Number of executors for the spout.                                          |
 |STORM_SPOUT_TASKS              |Total number of tasks for the spout.                                        |
 |STORM_SPOUT_EMITTED            |Number of messages emitted per spout per second.                            |
 |STORM_SPOUT_ACKED              |Number of messages acked per spout per second.                              |
 |STORM_SPOUT_FAILED             |Number of messages failed per spout per second.                             |
 |STORM_SPOUT_COMPLETELATENCY    |Total latency for processing the message per spout per second.              |
+|STORM_SPOUT_LASTERROR          |1 if an error / exception was generated, 0 otherwise.                       |
+
+LASTERROR value is received as nil or the error/exceptions string. We use the value 0 if lasterror is not nil and the field errorLapsedSecs is lessthan poll interval. Else the value is 0. This can be used in creating alerts for the error occured.
+
+### Events Generated
+
+An Event will be generated whenever the value of lasterror is not nil. The event will be displayed in the situation room. Once an error occurs an event will be triggered during each polling but, only one Event will be shown for the same error in the situation room with an occurance count. A new Event will be generated for a different error.
 
 ### Dashboards
 
