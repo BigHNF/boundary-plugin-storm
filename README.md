@@ -63,7 +63,7 @@ In order for the plugin to collect statistics from Storm you need to ensure that
 |STORM_SPOUT_COMPLETELATENCY    |Total latency for processing the message per spout per second.              |
 |STORM_SPOUT_LASTERROR          |1 if an error / exception was generated, 0 otherwise.                       |
 
-LASTERROR value is received as nil or the error/exceptions string. We use the value 0 if lasterror is not nil and the field errorLapsedSecs is lessthan poll interval. Else the value is 0. This can be used in creating alerts for the error occured.
+LASTERROR value is received as nil or the error/exceptions string. We use the value 1 if lasterror is not nil and the field errorLapsedSecs is less than poll interval. Else the value is 0. This can be used in creating alerts for the error occured.
 
 ### Events Generated
 
