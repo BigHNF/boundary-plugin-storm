@@ -129,7 +129,7 @@ local function topologyDetailExtractor(topology, item, self)
 
 	--Generating metrics and Event for lastError.
 	if(spout.lastError ~= '') then
-                self:emitEvent('error', ('Spout Error: %s'):format(spout.lastError), item.source, ssrc)
+                self:emitEvent('error', ('Spout Error- %s'):format(spout.lastError), item.source, ssrc)
         end
 
 	local spoutErrorLapsedSecs = spout.errorLapsedSecs
@@ -156,7 +156,7 @@ local function topologyDetailExtractor(topology, item, self)
 
 	--Generating metrics and Event for lastError.
 	if(bolt.lastError ~= '') then
-                self:emitEvent('error', ('Bolt Error: %s'):format(bolt.lastError), item.source, bsrc)
+                self:emitEvent('error', ('Bolt Error- %s'):format(bolt.lastError), item.source, bsrc)
         end
 
 	local boltErrorLapsedSecs = bolt.errorLapsedSecs
