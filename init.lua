@@ -89,24 +89,16 @@ local function createTopologySummaryDataSource(item)
 end
 
 --Function to get a single line error string as event does not support multiline strings.
---Usually the lastError will contain exception. We will only get the first line.
-local function getLastError (lastError)
-  local lines = {}
-  local errorString = 'LastError Occured'
-  if(framework.string.contains('\n', lastError)) then
-    lines = framework.string.split(lastError, '\n')
-
-    if(string.len(lines[1]) > 255) then
-      lines[1] = string.sub(lines[1], 1, 254)
-    end
+--Usually the lastError will contain exception. We are replacing the \n characters with ->.
+--We will only be collecting 250 characters.
+local function getLastError (lastError)  
+  if(string.len(lastError) > 250) then
+    lastError = string.sub(lastError, 1, 250)
   end
 
-  if((lines[1] ~= nil) and (lines[1] ~= '')) then
-    errorString = lines[1]
-  end
+  lastError, count = string.gsub(lastError, '\n', '->')  
 
-  return errorString
-
+  return lastError
 end
 
 local function topologySummaryExtractor (data, item, self)
