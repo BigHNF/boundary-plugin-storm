@@ -67,7 +67,7 @@ LASTERROR value is received as nil or the error/exceptions string. We use the va
 
 ### Events Generated
 
-An Event will be generated whenever the value of lasterror is not nil. The event will be displayed in the situation room. Once an error occurs an event will be triggered during each polling but, only one Event will be shown for the same error in the situation room with an occurance count. A new Event will be generated for a different error.
+An Event will be generated whenever the value of lasterror is not nil and will be displayed in the situation room. Once an error occurs an event will be triggered during each polling interval. We will see only one Event for the same error in the situation room with an occurance count. A new Event will be generated for a different error.
 
 ### Dashboards
 
@@ -76,4 +76,4 @@ An Event will be generated whenever the value of lasterror is not nil. The event
 - Storm Spouts
 
 ### References
-- [Apache Storm Documentation.](http://storm.apache.org/documentation.html)
+- [Apache Storm Documentation.](http://storm.apache.org/releases/current/index.html)

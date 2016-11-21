@@ -88,6 +88,19 @@ local function createTopologySummaryDataSource(item)
   return ds
 end
 
+--Function to get a single line error string as event does not support multiline strings.
+--Usually the lastError will contain exception. We are replacing the \n characters with ->.
+--We will only be collecting 250 characters.
+local function getLastError (lastError)  
+  if(string.len(lastError) > 250) then
+    lastError = string.sub(lastError, 1, 250)
+  end
+
+  lastError, count = string.gsub(lastError, '\n', '->')  
+
+  return lastError
+end
+
 local function topologySummaryExtractor (data, item, self)
   local result = {}
   local metric = function (...) ipack(result, ...) end
@@ -129,7 +142,8 @@ local function topologyDetailExtractor(topology, item, self)
 
 	--Generating metrics and Event for lastError.
 	if(spout.lastError ~= '') then
-                self:emitEvent('error', ('Spout Error: %s'):format(spout.lastError), item.source, ssrc)
+		local spoutErrorString = getLastError(spout.lastError)		
+                self:emitEvent('error', ('Spout Error- %s'):format(spoutErrorString), item.source, ssrc)
         end
 
 	local spoutErrorLapsedSecs = spout.errorLapsedSecs
@@ -156,7 +170,8 @@ local function topologyDetailExtractor(topology, item, self)
 
 	--Generating metrics and Event for lastError.
 	if(bolt.lastError ~= '') then
-                self:emitEvent('error', ('Bolt Error: %s'):format(bolt.lastError), item.source, bsrc)
+		local boltErrorString = getLastError(bolt.lastError)		
+                self:emitEvent('error', ('Bolt Error- %s'):format(boltErrorString), item.source, bsrc)
         end
 
 	local boltErrorLapsedSecs = bolt.errorLapsedSecs
