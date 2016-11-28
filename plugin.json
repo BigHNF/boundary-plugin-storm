@@ -1,7 +1,7 @@
 {
   "name" : "TrueSight Pulse Storm",
   "version" : "0.9.2",
-  "meterVersionRequired" : "4.2.0-611",
+  "meterVersionRequired" : "4.5.0-778",
   "unsupportedPlatforms" : [ ],
   "tags" : "storm", 
   "description": "Displays metrics from a Storm cluster",  
