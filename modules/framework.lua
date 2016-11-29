@@ -1054,7 +1054,7 @@ function NetDataSource:connect(callback)
   assert(notEmpty(self.port), 'You must specify a port to connect to.')
   assert(notEmpty(self.host), 'You must specify a host to connect to.')
   self.socket = net.createConnection(self.port, self.host, callback) 
-  self.socket:on('error', function (err) self:emit('error', 'Socket error: ' .. err.message) end)
+  self.socket:on('error', function (err) self:emit('error', 'Socket error: ' .. err) end)
 end
 
 framework.NetDataSource = NetDataSource
@@ -1198,7 +1198,7 @@ function Plugin:error(err)
   else
     msg = tostring(err)
   end
-  local source = err.source or self.source
+  local source = self.source
   self:printError(self.source .. ' Error', self.source, source, msg)
 end
 
@@ -1464,8 +1464,8 @@ function WebRequestDataSource:fetch(context, callback, params)
   end
 
   req:propagate('error', self, function (err)
-    err.context = self
-    err.params = params
+    --err.context = self
+    --err.params = params
     return err
   end)
   req:done()
